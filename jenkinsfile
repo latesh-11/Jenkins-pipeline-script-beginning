@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+    
+    parameters{
+        string(name:'person',defaultValue:'latesh',description:'Who are you')
+        booleanParam(name:'isMale',defaultValue:true,description:"")
+        choice(name:'city',choices:['jaipur','Bharatpur'],description:"")
+    }
+
+    stages {
+        stage('run command '){
+            steps{
+                sh '''
+                ls
+                pwd
+                date
+                '''
+            }
+        }
+        stage('environment var'){
+            environment{
+                name = 'latesh'
+            }
+            steps{
+                sh 'echo "my name is : ${name}"'
+            }
+        }
+        stage('parameters'){
+            steps{
+                sh 'echo "${person}"'
+            }
+        }
+        stage('continue') {
+            input {
+                message "want to run?"
+                ok "yes"
+            }
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+    post{
+    always{
+        echo 'I will run always'
+    }
+    failure{
+        echo 'Fail one or more job'
+    }
+    success{
+        echo 'all jobs are successfully run'
+    }
+}
+}
